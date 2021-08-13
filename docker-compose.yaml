@@ -1,0 +1,32 @@
+version: "2.3"
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: content_service
+    ports:
+      - 6060:6060
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - .env:/app/.env
+
+  mysql:
+    image: mysql:5.7 
+    container_name: content_service_mysql
+    command: mysqld --user=root
+    volumes:
+      - ./content.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_DATABASE=content_db
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+      - MYSQL_ROOT_PASSWORD=root
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 10
