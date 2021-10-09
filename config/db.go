@@ -11,6 +11,7 @@ type DBConfig struct {
 	DSN string
 }
 
+// LoadConfig ..
 func LoadConfig() DBConfig {
 	return DBConfig{
 		DSN: fmt.Sprintf("%s:%s@tcp(%s:%s)/%s",

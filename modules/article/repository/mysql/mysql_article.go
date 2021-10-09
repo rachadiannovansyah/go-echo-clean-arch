@@ -7,8 +7,8 @@ import (
 
 	"github.com/sirupsen/logrus"
 
-	"github.com/bxcodec/go-clean-arch/article/repository"
-	"github.com/bxcodec/go-clean-arch/domain"
+	"github.com/rachadiannovansyah/go-echo-clean-arch/article/repository"
+	"github.com/rachadiannovansyah/go-echo-clean-arch/domain"
 )
 
 type mysqlArticleRepository struct {
@@ -36,25 +36,25 @@ func (m *mysqlArticleRepository) fetch(ctx context.Context, query string, args .
 
 	result = make([]domain.Article, 0)
 	for rows.Next() {
-		t := domain.Article{}
+		article := domain.Article{}
 		authorID := int64(0)
 		err = rows.Scan(
-			&t.ID,
-			&t.Title,
-			&t.Content,
+			&article.ID,
+			&article.Title,
+			&article.Content,
 			&authorID,
-			&t.UpdatedAt,
-			&t.CreatedAt,
+			&article.UpdatedAt,
+			&article.CreatedAt,
 		)
 
 		if err != nil {
 			logrus.Error(err)
 			return nil, err
 		}
-		t.Author = domain.Author{
+		article.Author = domain.Author{
 			ID: authorID,
 		}
-		result = append(result, t)
+		result = append(result, article)
 	}
 
 	return result, nil
@@ -65,6 +65,7 @@ func (m *mysqlArticleRepository) Fetch(ctx context.Context, cursor string, num i
   						FROM article WHERE created_at > ? ORDER BY created_at LIMIT ? `
 
 	decodedCursor, err := repository.DecodeCursor(cursor)
+
 	if err != nil && cursor != "" {
 		return nil, "", domain.ErrBadParamInput
 	}
@@ -80,6 +81,7 @@ func (m *mysqlArticleRepository) Fetch(ctx context.Context, cursor string, num i
 
 	return
 }
+
 func (m *mysqlArticleRepository) GetByID(ctx context.Context, id int64) (res domain.Article, err error) {
 	query := `SELECT id,title,content, author_id, updated_at, created_at
   						FROM article WHERE ID = ?`
@@ -159,6 +161,7 @@ func (m *mysqlArticleRepository) Delete(ctx context.Context, id int64) (err erro
 
 	return
 }
+
 func (m *mysqlArticleRepository) Update(ctx context.Context, ar *domain.Article) (err error) {
 	query := `UPDATE article set title=?, content=?, author_id=?, updated_at=? WHERE ID = ?`
 

@@ -4,12 +4,12 @@ import (
 	"database/sql"
 	"log"
 
-	config "../config"
+	"github.com/rachadiannovansyah/go-echo-clean-arch/config"
 )
 
 // InitDB ...
 func InitDB(cfg *config.Config) *sql.DB {
-	dbConn, err := sql.Open(`mysql`, cfg.DB.DSN)
+	dbConn, err := sql.Open("mysql", cfg.DB.DSN)
 
 	if err != nil {
 		log.Fatal(err)

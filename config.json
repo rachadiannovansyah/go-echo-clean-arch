@@ -11,7 +11,7 @@
       "port": "3306",
       "user": "root",
       "pass": "sedekahcode",
-      "name": "jds_go_clean_arch"
+      "name": "article"
   }
 
 }

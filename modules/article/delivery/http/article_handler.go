@@ -1,6 +1,7 @@
 package http
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -8,7 +9,7 @@ import (
 	"github.com/sirupsen/logrus"
 	validator "gopkg.in/go-playground/validator.v9"
 
-	"github.com/bxcodec/go-clean-arch/domain"
+	"github.com/rachadiannovansyah/go-echo-clean-arch/domain"
 )
 
 // ResponseError represent the reseponse error struct
@@ -43,7 +44,7 @@ func (a *ArticleHandler) FetchArticle(c echo.Context) error {
 	if err != nil {
 		return c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
 	}
-
+	fmt.Println(nextCursor)
 	c.Response().Header().Set(`X-Cursor`, nextCursor)
 	return c.JSON(http.StatusOK, listAr)
 }
