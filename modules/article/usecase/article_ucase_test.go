@@ -9,9 +9,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 
-	ucase "github.com/rachadiannovansyah/go-echo-clean-arch/article/usecase"
 	"github.com/rachadiannovansyah/go-echo-clean-arch/domain"
 	"github.com/rachadiannovansyah/go-echo-clean-arch/domain/mocks"
+	ucase "github.com/rachadiannovansyah/go-echo-clean-arch/modules/article/usecase"
 )
 
 func TestFetch(t *testing.T) {
