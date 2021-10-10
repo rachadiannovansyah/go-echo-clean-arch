@@ -10,6 +10,7 @@ import (
 	validator "gopkg.in/go-playground/validator.v9"
 
 	"github.com/rachadiannovansyah/go-echo-clean-arch/domain"
+	errHandle "github.com/rachadiannovansyah/go-echo-clean-arch/utils"
 )
 
 // ResponseError represent the reseponse error struct
@@ -53,7 +54,7 @@ func (a *ArticleHandler) FetchArticle(c echo.Context) error {
 func (a *ArticleHandler) GetByID(c echo.Context) error {
 	idP, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusNotFound, domain.ErrNotFound.Error())
+		return c.JSON(http.StatusNotFound, errHandle.ErrNotFound.Error())
 	}
 
 	id := int64(idP)
@@ -102,7 +103,7 @@ func (a *ArticleHandler) Store(c echo.Context) (err error) {
 func (a *ArticleHandler) Delete(c echo.Context) error {
 	idP, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		return c.JSON(http.StatusNotFound, domain.ErrNotFound.Error())
+		return c.JSON(http.StatusNotFound, errHandle.ErrNotFound.Error())
 	}
 
 	id := int64(idP)
@@ -123,11 +124,11 @@ func getStatusCode(err error) int {
 
 	logrus.Error(err)
 	switch err {
-	case domain.ErrInternalServerError:
+	case errHandle.ErrInternalServerError:
 		return http.StatusInternalServerError
-	case domain.ErrNotFound:
+	case errHandle.ErrNotFound:
 		return http.StatusNotFound
-	case domain.ErrConflict:
+	case errHandle.ErrConflict:
 		return http.StatusConflict
 	default:
 		return http.StatusInternalServerError

@@ -8,6 +8,7 @@ import (
 	"golang.org/x/sync/errgroup"
 
 	"github.com/rachadiannovansyah/go-echo-clean-arch/domain"
+	errHandle "github.com/rachadiannovansyah/go-echo-clean-arch/utils"
 )
 
 type articleUsecase struct {
@@ -148,7 +149,7 @@ func (a *articleUsecase) Store(c context.Context, m *domain.Article) (err error)
 	defer cancel()
 	existedArticle, _ := a.GetByTitle(ctx, m.Title)
 	if existedArticle != (domain.Article{}) {
-		return domain.ErrConflict
+		return errHandle.ErrConflict
 	}
 
 	err = a.articleRepo.Store(ctx, m)
@@ -163,7 +164,7 @@ func (a *articleUsecase) Delete(c context.Context, id int64) (err error) {
 		return
 	}
 	if existedArticle == (domain.Article{}) {
-		return domain.ErrNotFound
+		return errHandle.ErrNotFound
 	}
 	return a.articleRepo.Delete(ctx, id)
 }

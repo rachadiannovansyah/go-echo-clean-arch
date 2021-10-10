@@ -9,6 +9,7 @@ import (
 
 	"github.com/rachadiannovansyah/go-echo-clean-arch/domain"
 	"github.com/rachadiannovansyah/go-echo-clean-arch/modules/article/repository"
+	errHandle "github.com/rachadiannovansyah/go-echo-clean-arch/utils"
 )
 
 type mysqlArticleRepository struct {
@@ -67,7 +68,7 @@ func (m *mysqlArticleRepository) Fetch(ctx context.Context, cursor string, num i
 	decodedCursor, err := repository.DecodeCursor(cursor)
 
 	if err != nil && cursor != "" {
-		return nil, "", domain.ErrBadParamInput
+		return nil, "", errHandle.ErrBadParamInput
 	}
 
 	res, err = m.fetch(ctx, query, decodedCursor, num)
@@ -94,7 +95,7 @@ func (m *mysqlArticleRepository) GetByID(ctx context.Context, id int64) (res dom
 	if len(list) > 0 {
 		res = list[0]
 	} else {
-		return res, domain.ErrNotFound
+		return res, errHandle.ErrNotFound
 	}
 
 	return
@@ -112,13 +113,14 @@ func (m *mysqlArticleRepository) GetByTitle(ctx context.Context, title string) (
 	if len(list) > 0 {
 		res = list[0]
 	} else {
-		return res, domain.ErrNotFound
+		return res, errHandle.ErrNotFound
 	}
 	return
 }
 
 func (m *mysqlArticleRepository) Store(ctx context.Context, a *domain.Article) (err error) {
-	query := `INSERT  article SET title=? , content=? , author_id=?, updated_at=? , created_at=?`
+	fmt.Println(ctx)
+	query := `INSERT  article SET title=? , content=? , author_id=?, updated_at=?, created_at=?`
 	stmt, err := m.Conn.PrepareContext(ctx, query)
 	if err != nil {
 		return
