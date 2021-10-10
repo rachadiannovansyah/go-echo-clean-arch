@@ -16,6 +16,9 @@ import (
 	_articleRepo "github.com/rachadiannovansyah/go-echo-clean-arch/modules/article/repository/mysql"
 	_articleUcase "github.com/rachadiannovansyah/go-echo-clean-arch/modules/article/usecase"
 	_authorRepo "github.com/rachadiannovansyah/go-echo-clean-arch/modules/author/repository/mysql"
+	_userHttpDelivery "github.com/rachadiannovansyah/go-echo-clean-arch/modules/user/delivery/http"
+	_userRepo "github.com/rachadiannovansyah/go-echo-clean-arch/modules/user/repository/mysql"
+	_userUcase "github.com/rachadiannovansyah/go-echo-clean-arch/modules/user/usecase"
 )
 
 func init() {
@@ -68,10 +71,13 @@ func main() {
 	// init repo
 	authorRepo := _authorRepo.NewMysqlAuthorRepository(dbConn)
 	articleRepo := _articleRepo.NewMysqlArticleRepository(dbConn)
+	userRepo := _userRepo.NewMysqlUserRepository(dbConn)
 
 	// init usecase
 	articleUsecase := _articleUcase.NewArticleUsecase(articleRepo, authorRepo, timeoutContext)
 	_articleHttpDelivery.NewArticleHandler(e, articleUsecase)
+	userUsecase := _userUcase.NewUserUsecase(userRepo, timeoutContext)
+	_userHttpDelivery.NewUserHandler(e, userUsecase)
 
 	log.Fatal(e.Start(viper.GetString("server.address")))
 }

@@ -15,10 +15,12 @@ type User struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
+// UserUsecase ..
 type UserUsecase interface {
 	Fetch(ctx context.Context, cursor string, num int64) ([]User, string, error)
 }
 
+// UserRepository ..
 type UserRepository interface {
-	Fetch(ctx context.Context, cursor string, num int64) (res []User, nextCursor int64, err error)
+	Fetch(ctx context.Context, cursor string, num int64) (res []User, nextCursor string, err error)
 }

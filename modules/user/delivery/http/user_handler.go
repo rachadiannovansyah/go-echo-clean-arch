@@ -6,9 +6,16 @@ import (
 	"strconv"
 
 	"github.com/labstack/echo"
+	"github.com/sirupsen/logrus"
 
 	"github.com/rachadiannovansyah/go-echo-clean-arch/domain"
+	errHandle "github.com/rachadiannovansyah/go-echo-clean-arch/utils"
 )
+
+// ResponseError represent the reseponse error struct
+type ResponseError struct {
+	Message string `json:"message"`
+}
 
 // UserHandler  represent the httphandler for article
 type UserHandler struct {
@@ -37,4 +44,22 @@ func (a *UserHandler) FetchUser(c echo.Context) error {
 	fmt.Println(nextCursor)
 	c.Response().Header().Set(`X-Cursor`, nextCursor)
 	return c.JSON(http.StatusOK, listUser)
+}
+
+func getStatusCode(err error) int {
+	if err == nil {
+		return http.StatusOK
+	}
+
+	logrus.Error(err)
+	switch err {
+	case errHandle.ErrInternalServerError:
+		return http.StatusInternalServerError
+	case errHandle.ErrNotFound:
+		return http.StatusNotFound
+	case errHandle.ErrConflict:
+		return http.StatusConflict
+	default:
+		return http.StatusInternalServerError
+	}
 }
